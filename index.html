@@ -1,0 +1,801 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Fachionn Site</title>
+  
+  <!-- Шрифты и иконки FontAwesome -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;700;800&family=Inter:wght@300;400;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  
+  <style>
+    :root {
+      --glass-bg: rgba(12, 16, 32, 0.55);
+      --glass-border: rgba(255, 255, 255, 0.15);
+      --glass-hover: rgba(255, 255, 255, 0.1);
+      --accent: #a855f7;
+      --accent-glow: rgba(168, 85, 247, 0.6);
+      --text-main: #f8fafc;
+      --text-muted: #94a3b8;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      font-family: 'Inter', sans-serif;
+    }
+
+    body {
+      background: #020617;
+      color: var(--text-main);
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 40px 20px 120px 20px;
+      overflow-x: hidden;
+      position: relative;
+    }
+
+    /* Анимированный Canvas с движущимися звездами */
+    #space-bg {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      z-index: 0;
+      pointer-events: none;
+    }
+
+    /* Туманности */
+    .nebula {
+      position: fixed;
+      border-radius: 50%;
+      filter: blur(130px);
+      z-index: 0;
+      opacity: 0.35;
+      pointer-events: none;
+      animation: pulse 16s infinite alternate ease-in-out;
+    }
+    .nebula-1 { width: 550px; height: 550px; background: #4f46e5; top: -10%; left: -10%; }
+    .nebula-2 { width: 650px; height: 650px; background: #9333ea; bottom: -10%; right: -10%; animation-delay: -8s; }
+
+    @keyframes pulse {
+      0% { transform: scale(1) translate(0, 0); }
+      100% { transform: scale(1.2) translate(40px, -20px); }
+    }
+
+    /* Заголовок сайта */
+    .header-brand {
+      position: relative;
+      z-index: 1;
+      text-align: center;
+      margin-bottom: 25px;
+    }
+
+    .brand-title {
+      font-family: 'Space Grotesk', sans-serif;
+      font-size: 4.5rem;
+      font-weight: 800;
+      letter-spacing: 6px;
+      background: linear-gradient(180deg, #ffffff 20%, #c084fc 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      text-transform: uppercase;
+      filter: drop-shadow(0 0 35px rgba(168, 85, 247, 0.4));
+    }
+
+    /* Главный каркас */
+    .main-container {
+      position: relative;
+      z-index: 1;
+      width: 100%;
+      max-width: 780px;
+    }
+
+    .glass-card {
+      background: var(--glass-bg);
+      backdrop-filter: blur(25px) saturate(190%);
+      -webkit-backdrop-filter: blur(25px) saturate(190%);
+      border: 1px solid var(--glass-border);
+      border-radius: 28px;
+      padding: 35px 40px;
+      box-shadow: 0 30px 60px rgba(0, 0, 0, 0.7),
+                  inset 0 1px 0 rgba(255, 255, 255, 0.2);
+    }
+
+    /* Контент вкладок */
+    .tab-content {
+      display: none;
+      animation: fadeIn 0.4s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+    }
+
+    .tab-content.active {
+      display: block;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(12px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    /* 1. Главная */
+    .news-box {
+      background: rgba(255, 255, 255, 0.02);
+      border: 1px dashed rgba(255, 255, 255, 0.15);
+      border-radius: 18px;
+      padding: 60px 20px;
+      text-align: center;
+      color: var(--text-muted);
+      font-size: 1.05rem;
+      letter-spacing: 0.5px;
+    }
+
+    /* 2. Музыка */
+    .album-section {
+      text-align: center;
+      margin-bottom: 30px;
+    }
+
+    .album-cover {
+      width: 210px;
+      height: 210px;
+      object-fit: cover;
+      border-radius: 20px;
+      box-shadow: 0 15px 40px rgba(0, 0, 0, 0.8),
+                  0 0 20px rgba(168, 85, 247, 0.2);
+      border: 1px solid var(--glass-border);
+      transition: transform 0.4s ease;
+    }
+
+    .album-cover:hover {
+      transform: scale(1.04) rotate(1deg);
+    }
+
+    .album-meta {
+      font-size: 0.85rem;
+      color: var(--text-muted);
+      margin-top: 14px;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      font-weight: 600;
+    }
+
+    .tracks-list {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      max-height: 400px;
+      overflow-y: auto;
+      padding-right: 6px;
+    }
+
+    .tracks-list::-webkit-scrollbar {
+      width: 6px;
+    }
+    .tracks-list::-webkit-scrollbar-thumb {
+      background: rgba(255, 255, 255, 0.2);
+      border-radius: 10px;
+    }
+
+    .track-item {
+      background: rgba(255, 255, 255, 0.03);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      padding: 12px 20px;
+      border-radius: 16px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 15px;
+      transition: all 0.3s ease;
+    }
+
+    .track-item:hover {
+      background: var(--glass-hover);
+      border-color: rgba(255, 255, 255, 0.25);
+      transform: translateX(4px);
+    }
+
+    .track-info {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      flex-grow: 1;
+      overflow: hidden;
+    }
+
+    .play-btn {
+      width: 38px;
+      height: 38px;
+      border-radius: 50%;
+      background: rgba(168, 85, 247, 0.2);
+      border: 1px solid var(--accent);
+      color: #fff;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      flex-shrink: 0;
+    }
+
+    .play-btn:hover {
+      background: var(--accent);
+      box-shadow: 0 0 15px var(--accent-glow);
+      transform: scale(1.1);
+    }
+
+    .track-name {
+      font-weight: 500;
+      font-size: 0.95rem;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    /* 3. О проекте */
+    .about-text p {
+      line-height: 1.8;
+      color: #cbd5e1;
+      margin-bottom: 18px;
+      font-size: 0.95rem;
+      font-weight: 300;
+    }
+
+    .social-links {
+      margin-top: 30px;
+      padding-top: 25px;
+      border-top: 1px solid var(--glass-border);
+    }
+
+    .social-title {
+      font-size: 0.85rem;
+      color: var(--text-muted);
+      margin-bottom: 15px;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+    }
+
+    .links-grid {
+      display: flex;
+      gap: 14px;
+      flex-wrap: wrap;
+    }
+
+    .social-btn {
+      text-decoration: none;
+      color: var(--text-main);
+      background: rgba(255, 255, 255, 0.04);
+      border: 1px solid var(--glass-border);
+      padding: 12px 22px;
+      border-radius: 14px;
+      font-size: 0.9rem;
+      font-weight: 600;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      transition: all 0.3s ease;
+    }
+
+    .social-btn i { font-size: 1.2rem; }
+    .social-btn.bandlab i { color: #f59e0b; }
+    .social-btn.telegram i { color: #38bdf8; }
+    .social-btn.vk i { color: #0077ff; }
+
+    .social-btn:hover {
+      background: rgba(255, 255, 255, 0.12);
+      border-color: var(--accent);
+      box-shadow: 0 0 20px var(--accent-glow);
+      transform: translateY(-3px);
+    }
+
+    /* Подпись разработчика */
+    .site-author {
+      margin-top: 35px;
+      text-align: right;
+      font-size: 0.8rem;
+      color: var(--text-muted);
+      opacity: 0.6;
+      font-style: italic;
+      letter-spacing: 0.5px;
+    }
+
+    /* Нижняя панель навигации (Dock) */
+    .bottom-nav {
+      position: fixed;
+      bottom: 25px;
+      left: 50%;
+      transform: translateX(-50%);
+      z-index: 10;
+      display: flex;
+      gap: 8px;
+      background: rgba(10, 14, 28, 0.7);
+      backdrop-filter: blur(20px) saturate(200%);
+      -webkit-backdrop-filter: blur(20px) saturate(200%);
+      padding: 8px;
+      border-radius: 22px;
+      border: 1px solid var(--glass-border);
+      box-shadow: 0 20px 40px rgba(0,0,0,0.8);
+    }
+
+    .nav-btn {
+      background: transparent;
+      border: none;
+      color: var(--text-muted);
+      padding: 12px 26px;
+      font-size: 0.9rem;
+      font-weight: 600;
+      border-radius: 16px;
+      cursor: pointer;
+      transition: all 0.3s ease;
+    }
+
+    .nav-btn:hover {
+      color: var(--text-main);
+      background: var(--glass-hover);
+    }
+
+    .nav-btn.active {
+      color: #fff;
+      background: rgba(168, 85, 247, 0.25);
+      border: 1px solid var(--accent);
+      box-shadow: 0 0 15px var(--accent-glow);
+    }
+
+    /* МОДАЛЬНЫЙ СТИЛЬНЫЙ ПРОИГРЫВАТЕЛЬ (Liquid Glass Player) */
+    .modal-overlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(2, 6, 23, 0.75);
+      backdrop-filter: blur(15px);
+      -webkit-backdrop-filter: blur(15px);
+      z-index: 100;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.4s ease;
+      padding: 20px;
+    }
+
+    .modal-overlay.active {
+      opacity: 1;
+      pointer-events: all;
+    }
+
+    .player-modal {
+      background: rgba(18, 22, 41, 0.85);
+      border: 1px solid var(--glass-border);
+      border-radius: 28px;
+      padding: 30px;
+      width: 100%;
+      max-width: 380px;
+      text-align: center;
+      box-shadow: 0 30px 60px rgba(0, 0, 0, 0.9), 0 0 40px rgba(168, 85, 247, 0.2);
+      transform: scale(0.85);
+      transition: transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+      position: relative;
+    }
+
+    .modal-overlay.active .player-modal {
+      transform: scale(1);
+    }
+
+    .close-modal {
+      position: absolute;
+      top: 18px;
+      right: 20px;
+      background: none;
+      border: none;
+      color: var(--text-muted);
+      font-size: 1.2rem;
+      cursor: pointer;
+      transition: color 0.2s ease;
+    }
+
+    .close-modal:hover { color: #fff; }
+
+    .modal-cover {
+      width: 220px;
+      height: 220px;
+      object-fit: cover;
+      border-radius: 20px;
+      margin: 10px auto 20px auto;
+      box-shadow: 0 15px 30px rgba(0,0,0,0.6);
+      border: 1px solid var(--glass-border);
+    }
+
+    .modal-track-title {
+      font-size: 1.1rem;
+      font-weight: 700;
+      margin-bottom: 4px;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .modal-track-artist {
+      font-size: 0.85rem;
+      color: var(--accent);
+      margin-bottom: 20px;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+    }
+
+    /* Прогрессбар */
+    .progress-container {
+      width: 100%;
+      background: rgba(255, 255, 255, 0.1);
+      height: 6px;
+      border-radius: 10px;
+      cursor: pointer;
+      position: relative;
+      margin-bottom: 8px;
+    }
+
+    .progress-bar {
+      height: 100%;
+      background: linear-gradient(90deg, #a855f7, #c084fc);
+      width: 0%;
+      border-radius: 10px;
+      position: relative;
+      box-shadow: 0 0 10px var(--accent-glow);
+    }
+
+    .time-info {
+      display: flex;
+      justify-content: space-between;
+      font-size: 0.75rem;
+      color: var(--text-muted);
+      margin-bottom: 20px;
+    }
+
+    .player-controls {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      gap: 20px;
+    }
+
+    .modal-btn {
+      background: none;
+      border: none;
+      color: var(--text-main);
+      font-size: 1.3rem;
+      cursor: pointer;
+      transition: all 0.2s ease;
+    }
+
+    .modal-btn:hover {
+      color: var(--accent);
+      transform: scale(1.15);
+    }
+
+    .modal-btn.play-main {
+      width: 55px;
+      height: 55px;
+      border-radius: 50%;
+      background: var(--accent);
+      color: #fff;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.4rem;
+      box-shadow: 0 0 20px var(--accent-glow);
+    }
+
+    .modal-btn.play-main:hover {
+      transform: scale(1.08);
+    }
+
+    @media (max-width: 600px) {
+      .brand-title { font-size: 2.8rem; }
+      .glass-card { padding: 25px 20px; }
+      .bottom-nav { width: 92%; justify-content: space-around; }
+      .nav-btn { padding: 10px 14px; font-size: 0.8rem; }
+      .links-grid { flex-direction: column; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Анимированный Космос -->
+  <canvas id="space-bg"></canvas>
+  <div class="nebula nebula-1"></div>
+  <div class="nebula nebula-2"></div>
+
+  <!-- Название группы -->
+  <header class="header-brand">
+    <h1 class="brand-title">Fachionn</h1>
+  </header>
+
+  <!-- Главный каркас -->
+  <main class="main-container">
+    <div class="glass-card">
+
+      <!-- Вкладка 1: Главная -->
+      <section id="main" class="tab-content active">
+        <div class="news-box">
+          новостей пока нет :(
+        </div>
+      </section>
+
+      <!-- Вкладка 2: Музыка -->
+      <section id="music" class="tab-content">
+        <div class="album-section">
+          <img src="album_image.png" alt="Touch Cover" class="album-cover" onerror="this.src='https://via.placeholder.com/210/0d1117/a855f7?text=Touch';">
+          <div class="album-meta">Touch. Album, 2025</div>
+        </div>
+
+        <div class="tracks-list" id="tracksContainer">
+          <!-- Треки генерируются автоматически -->
+        </div>
+      </section>
+
+      <!-- Вкладка 3: О проекте -->
+      <section id="about" class="tab-content">
+        <div class="about-text">
+          <p>Датой рождения нашего проекта считается 18 сентября 2023 года. Именно в этот день был открыт наш канал в Telegram, где появилась новость о выходе первых двух синглов — Impro и Blue Magic. И уже 1 октября этого же года вышел дебютный альбом Anonymous. Почему же он получил такое загадочное название? Всё очень просто. Автор всех композиций предпочитает не распространяться о себе, поэтому на обложке альбома мы видим лишь его силуэт. А сам проект изначально получил название Ares, образованное от его собственного имени. Позднее группа была переименована в Fachionn. У этого названия тоже интересная история, связанная с орфографической ошибкой. Автор проекта искал новое название и тут ему пришло на ум английское слово Fashion - мода. Но написал он его неправильно. Вместо буквы "s" поставил "с". И уже при создании логотипа решили, что надо добавить ещё одну букву "n". Таким образом название стало более броским и запоминающимся.</p>
+          
+          <p>На данный момент проект насчитывает около 20 студийных альбомов, несколько EP и Mixtape изданий, а также множество синглов. Работа продолжается, поэтому мы ещё долго будем радовать вас интересным и оригинальным музыкальным материалом.</p>
+        </div>
+
+        <div class="social-links">
+          <div class="social-title">Чтобы слушать нашу музыку и не пропускать новостей:</div>
+          <div class="links-grid">
+            <a href="https://www.bandlab.com/fachionn" target="_blank" rel="noopener" class="social-btn bandlab">
+              <i class="fa-solid fa-record-vinyl"></i> BandLab
+            </a>
+            <a href="https://t.me/fachionn_music" target="_blank" rel="noopener" class="social-btn telegram">
+              <i class="fa-brands fa-telegram"></i> Telegram
+            </a>
+            <a href="https://vk.com/fachionn" target="_blank" rel="noopener" class="social-btn vk">
+              <i class="fa-brands fa-vk"></i> ВКонтакте
+            </a>
+          </div>
+        </div>
+
+        <!-- Автор сайта -->
+        <div class="site-author">Site by vizquacker</div>
+      </section>
+
+    </div>
+  </main>
+
+  <!-- Нижняя панель вкладок -->
+  <nav class="bottom-nav">
+    <button class="nav-btn active" onclick="openTab(event, 'main')">Главная</button>
+    <button class="nav-btn" onclick="openTab(event, 'music')">Музыка</button>
+    <button class="nav-btn" onclick="openTab(event, 'about')">О проекте</button>
+  </nav>
+
+  <!-- МОДАЛЬНЫЙ ПРОИГРЫВАТЕЛЬ -->
+  <div class="modal-overlay" id="playerModal">
+    <div class="player-modal">
+      <button class="close-modal" onclick="closePlayerModal()"><i class="fa-solid fa-xmark"></i></button>
+      
+      <img src="album_image.png" alt="Cover" class="modal-cover" id="modalCover" onerror="this.src='https://via.placeholder.com/220/0d1117/a855f7?text=Fachionn';">
+      
+      <div class="modal-track-title" id="modalTitle">Track Title</div>
+      <div class="modal-track-artist">Fachionn</div>
+
+      <div class="progress-container" id="progressContainer" onclick="setProgress(event)">
+        <div class="progress-bar" id="progressBar"></div>
+      </div>
+
+      <div class="time-info">
+        <span id="currentTime">0:00</span>
+        <span id="durationTime">0:00</span>
+      </div>
+
+      <div class="player-controls">
+        <button class="modal-btn" onclick="prevTrack()"><i class="fa-solid fa-backward-step"></i></button>
+        <button class="modal-btn play-main" onclick="toggleModalPlay()" id="modalPlayBtn"><i class="fa-solid fa-play"></i></button>
+        <button class="modal-btn" onclick="nextTrack()"><i class="fa-solid fa-forward-step"></i></button>
+      </div>
+    </div>
+  </div>
+
+  <audio id="globalAudio"></audio>
+
+  <script>
+    // --- 1. СПИСОК ТРЕКОВ (В ОБРАТНОМ ПОРЯДКЕ) ---
+    const rawTrackFiles = [
+      "Fachionn - Along 2025-09-04 13_37.m4a",
+      "Fachionn - An Easy Game 2025-10-11 22_09.m4a",
+      "Fachionn - Don't Call Me.mp3",
+      "Fachionn - Don't Give Up.mp3",
+      "Fachionn - Eyes of the Beast (Radio Version).mp3",
+      "Fachionn - Eyes of the Beast (Reprise) 2025-10-11 22_08.m4a",
+      "Fachionn - Fairy Tale (Radio Version).mp3",
+      "Fachionn - Hands Sky.mp3",
+      "Fachionn - I Am Destiny.mp3",
+      "Fachionn - Pure Thoughts.mp3",
+      "Fachionn - Take It Forever.mp3"
+    ];
+
+    // Разворачиваем список для обратного порядка
+    const trackFiles = rawTrackFiles.reverse();
+
+    const tracksContainer = document.getElementById('tracksContainer');
+    const globalAudio = document.getElementById('globalAudio');
+    const playerModal = document.getElementById('playerModal');
+    
+    const modalTitle = document.getElementById('modalTitle');
+    const modalPlayBtn = document.getElementById('modalPlayBtn');
+    const progressBar = document.getElementById('progressBar');
+    const currentTimeEl = document.getElementById('currentTime');
+    const durationTimeEl = document.getElementById('durationTime');
+
+    let currentTrackIndex = -1;
+
+    // Рендер списка треков
+    trackFiles.forEach((file, index) => {
+      let cleanName = file.replace(/^Fachionn - /, '')
+                          .replace(/\s\d{4}-\d{2}-\d{2}.*$/, '')
+                          .replace(/\.[^/.]+$/, "");
+
+      const item = document.createElement('div');
+      item.className = 'track-item';
+      item.innerHTML = `
+        <div class="track-info">
+          <button class="play-btn" onclick="openAndPlay(${index})">
+            <i class="fa-solid fa-play"></i>
+          </button>
+          <span class="track-name">${cleanName}</span>
+        </div>
+      `;
+      tracksContainer.appendChild(item);
+    });
+
+    // Управление модальным плеером
+    function openAndPlay(index) {
+      if (currentTrackIndex !== index) {
+        currentTrackIndex = index;
+        const file = trackFiles[index];
+        let cleanName = file.replace(/^Fachionn - /, '')
+                            .replace(/\s\d{4}-\d{2}-\d{2}.*$/, '')
+                            .replace(/\.[^/.]+$/, "");
+        
+        modalTitle.textContent = cleanName;
+        globalAudio.src = `Tracks/${encodeURIComponent(file)}`;
+        globalAudio.play();
+      } else if (globalAudio.paused) {
+        globalAudio.play();
+      }
+
+      playerModal.classList.add('active');
+      updatePlayIcons(true);
+    }
+
+    function closePlayerModal() {
+      playerModal.classList.remove('active');
+    }
+
+    function toggleModalPlay() {
+      if (globalAudio.paused) {
+        globalAudio.play();
+        updatePlayIcons(true);
+      } else {
+        globalAudio.pause();
+        updatePlayIcons(false);
+      }
+    }
+
+    function updatePlayIcons(isPlaying) {
+      modalPlayBtn.innerHTML = isPlaying ? '<i class="fa-solid fa-pause"></i>' : '<i class="fa-solid fa-play"></i>';
+    }
+
+    function prevTrack() {
+      if (currentTrackIndex > 0) openAndPlay(currentTrackIndex - 1);
+      else openAndPlay(trackFiles.length - 1);
+    }
+
+    function nextTrack() {
+      if (currentTrackIndex < trackFiles.length - 1) openAndPlay(currentTrackIndex + 1);
+      else openAndPlay(0);
+    }
+
+    // Обновление таймера и бара
+    globalAudio.addEventListener('timeupdate', () => {
+      if (globalAudio.duration) {
+        const progressPercent = (globalAudio.currentTime / globalAudio.duration) * 100;
+        progressBar.style.width = `${progressPercent}%`;
+
+        currentTimeEl.textContent = formatTime(globalAudio.currentTime);
+        durationTimeEl.textContent = formatTime(globalAudio.duration);
+      }
+    });
+
+    globalAudio.addEventListener('ended', () => {
+      nextTrack();
+    });
+
+    function setProgress(e) {
+      const width = document.getElementById('progressContainer').clientWidth;
+      const clickX = e.offsetX;
+      const duration = globalAudio.duration;
+      globalAudio.currentTime = (clickX / width) * duration;
+    }
+
+    function formatTime(seconds) {
+      const min = Math.floor(seconds / 60);
+      const sec = Math.floor(seconds % 60);
+      return `${min}:${sec < 10 ? '0' : ''}${sec}`;
+    }
+
+    // --- 2. ПЕРЕКЛЮЧЕНИЕ ВКЛАДОК ---
+    function openTab(evt, tabId) {
+      document.querySelectorAll('.tab-content').forEach(tab => tab.classList.remove('active'));
+      document.querySelectorAll('.nav-btn').forEach(btn => btn.classList.remove('active'));
+
+      document.getElementById(tabId).classList.add('active');
+      evt.currentTarget.classList.add('active');
+    }
+
+    // --- 3. ДВИЖЕНИЕ ЗВЁЗД В КОСМОСЕ (Space Travel Animation) ---
+    const canvas = document.getElementById('space-bg');
+    const ctx = canvas.getContext('2d');
+
+    let stars = [];
+    const numStars = 220;
+
+    function resizeCanvas() {
+      canvas.width = window.innerWidth;
+      canvas.height = window.innerHeight;
+    }
+
+    function initStars() {
+      stars = [];
+      for (let i = 0; i < numStars; i++) {
+        stars.push({
+          x: Math.random() * canvas.width,
+          y: Math.random() * canvas.height,
+          radius: Math.random() * 1.6 + 0.2,
+          speedY: Math.random() * 0.4 + 0.1, // Плавное движение вниз
+          alpha: Math.random()
+        });
+      }
+    }
+
+    function renderSpace() {
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+      stars.forEach(star => {
+        star.y += star.speedY;
+        if (star.y > canvas.height) {
+          star.y = 0;
+          star.x = Math.random() * canvas.width;
+        }
+
+        ctx.beginPath();
+        ctx.arc(star.x, star.y, star.radius, 0, Math.PI * 2);
+        ctx.fillStyle = `rgba(255, 255, 255, ${star.alpha})`;
+        ctx.fill();
+      });
+
+      requestAnimationFrame(renderSpace);
+    }
+
+    window.addEventListener('resize', () => {
+      resizeCanvas();
+      initStars();
+    });
+
+    resizeCanvas();
+    initStars();
+    renderSpace();
+  </script>
+</body>
+</html>
+
