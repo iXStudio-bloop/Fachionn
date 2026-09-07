@@ -5,7 +5,6 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Fachionn Site</title>
   
-  <!-- Шрифты и иконки FontAwesome -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;700;800&family=Inter:wght@300;400;600&display=swap" rel="stylesheet">
@@ -41,7 +40,7 @@
       position: relative;
     }
 
-    /* Анимированный Canvas с движущимися звездами */
+    /* Фоны и визуальные эффекты */
     #space-bg {
       position: fixed;
       top: 0;
@@ -52,7 +51,6 @@
       pointer-events: none;
     }
 
-    /* Туманности */
     .nebula {
       position: fixed;
       border-radius: 50%;
@@ -62,6 +60,7 @@
       pointer-events: none;
       animation: pulse 16s infinite alternate ease-in-out;
     }
+
     .nebula-1 { width: 550px; height: 550px; background: #4f46e5; top: -10%; left: -10%; }
     .nebula-2 { width: 650px; height: 650px; background: #9333ea; bottom: -10%; right: -10%; animation-delay: -8s; }
 
@@ -70,7 +69,6 @@
       100% { transform: scale(1.2) translate(40px, -20px); }
     }
 
-    /* Заголовок сайта */
     .header-brand {
       position: relative;
       z-index: 1;
@@ -90,7 +88,6 @@
       filter: drop-shadow(0 0 35px rgba(168, 85, 247, 0.4));
     }
 
-    /* Главный каркас */
     .main-container {
       position: relative;
       z-index: 1;
@@ -109,7 +106,6 @@
                   inset 0 1px 0 rgba(255, 255, 255, 0.2);
     }
 
-    /* Контент вкладок */
     .tab-content {
       display: none;
       animation: fadeIn 0.4s cubic-bezier(0.16, 1, 0.3, 1) forwards;
@@ -124,8 +120,7 @@
       to { opacity: 1; transform: translateY(0); }
     }
 
-    /* 1. Главная */
-    .news-box {
+    .empty-box {
       background: rgba(255, 255, 255, 0.02);
       border: 1px dashed rgba(255, 255, 255, 0.15);
       border-radius: 18px;
@@ -136,7 +131,6 @@
       letter-spacing: 0.5px;
     }
 
-    /* 2. Музыка */
     .album-section {
       text-align: center;
       margin-bottom: 30px;
@@ -238,7 +232,6 @@
       text-overflow: ellipsis;
     }
 
-    /* 3. О проекте */
     .about-text p {
       line-height: 1.8;
       color: #cbd5e1;
@@ -294,18 +287,25 @@
       transform: translateY(-3px);
     }
 
-    /* Подпись разработчика */
-    .site-author {
+    .site-author-link {
+      display: block;
       margin-top: 35px;
       text-align: right;
       font-size: 0.8rem;
       color: var(--text-muted);
-      opacity: 0.6;
+      opacity: 0.7;
       font-style: italic;
       letter-spacing: 0.5px;
+      text-decoration: none;
+      transition: all 0.2s ease;
     }
 
-    /* Нижняя панель навигации (Dock) */
+    .site-author-link:hover {
+      opacity: 1;
+      color: var(--accent);
+      text-shadow: 0 0 10px var(--accent-glow);
+    }
+
     .bottom-nav {
       position: fixed;
       bottom: 25px;
@@ -347,7 +347,6 @@
       box-shadow: 0 0 15px var(--accent-glow);
     }
 
-    /* МОДАЛЬНЫЙ СТИЛЬНЫЙ ПРОИГРЫВАТЕЛЬ (Liquid Glass Player) */
     .modal-overlay {
       position: fixed;
       top: 0;
@@ -432,7 +431,6 @@
       letter-spacing: 1px;
     }
 
-    /* Прогрессбар */
     .progress-container {
       width: 100%;
       background: rgba(255, 255, 255, 0.1);
@@ -509,36 +507,31 @@
 </head>
 <body>
 
-  <!-- Анимированный Космос -->
   <canvas id="space-bg"></canvas>
   <div class="nebula nebula-1"></div>
   <div class="nebula nebula-2"></div>
 
-  <!-- Название группы -->
   <header class="header-brand">
     <h1 class="brand-title">Fachionn</h1>
   </header>
 
-  <!-- Главный каркас -->
   <main class="main-container">
     <div class="glass-card">
 
-      <!-- Вкладка 1: Главная -->
+      <!-- Вкладка 1: Главная (Сингл Star Trap) -->
       <section id="main" class="tab-content active">
-        <div class="news-box">
-          новостей пока нет :(
+        <div class="album-section">
+          <img src="album_image.png" alt="Star Trap Cover" class="album-cover" id="mainAlbumCoverImg">
+          <div class="album-meta">Star Trap. Single, 2026</div>
         </div>
+
+        <div class="tracks-list" id="mainTracksContainer"></div>
       </section>
 
       <!-- Вкладка 2: Музыка -->
       <section id="music" class="tab-content">
-        <div class="album-section">
-          <img src="album_image.png" alt="Touch Cover" class="album-cover" onerror="this.src='https://via.placeholder.com/210/0d1117/a855f7?text=Touch';">
-          <div class="album-meta">Touch. Album, 2025</div>
-        </div>
-
-        <div class="tracks-list" id="tracksContainer">
-          <!-- Треки генерируются автоматически -->
+        <div class="empty-box">
+          музыки пока нет :(
         </div>
       </section>
 
@@ -553,43 +546,43 @@
         <div class="social-links">
           <div class="social-title">Чтобы слушать нашу музыку и не пропускать новостей:</div>
           <div class="links-grid">
-            <a href="https://www.bandlab.com/fachionn" target="_blank" rel="noopener" class="social-btn bandlab">
-              <i class="fa-solid fa-record-vinyl"></i> BandLab
+            <a href="https://www.bandlab.com/fachionn" target="_blank" rel="noopener noreferrer" class="social-btn bandlab">
+              <i class="fa-solid fa-record-vinyl" aria-hidden="true"></i> BandLab
             </a>
-            <a href="https://t.me/fachionn_music" target="_blank" rel="noopener" class="social-btn telegram">
-              <i class="fa-brands fa-telegram"></i> Telegram
+            <a href="https://t.me/fachionn_music" target="_blank" rel="noopener noreferrer" class="social-btn telegram">
+              <i class="fa-brands fa-telegram" aria-hidden="true"></i> Telegram
             </a>
-            <a href="https://vk.com/fachionn" target="_blank" rel="noopener" class="social-btn vk">
-              <i class="fa-brands fa-vk"></i> ВКонтакте
+            <a href="https://vk.com/fachionn" target="_blank" rel="noopener noreferrer" class="social-btn vk">
+              <i class="fa-brands fa-vk" aria-hidden="true"></i> ВКонтакте
             </a>
           </div>
         </div>
 
-        <!-- Автор сайта -->
-        <div class="site-author">Site by vizquacker</div>
+        <a href="https://t.me/vizquacker" target="_blank" rel="noopener noreferrer" class="site-author-link">Site by vizquacker</a>
       </section>
 
     </div>
   </main>
 
-  <!-- Нижняя панель вкладок -->
-  <nav class="bottom-nav">
-    <button class="nav-btn active" onclick="openTab(event, 'main')">Главная</button>
-    <button class="nav-btn" onclick="openTab(event, 'music')">Музыка</button>
-    <button class="nav-btn" onclick="openTab(event, 'about')">О проекте</button>
+  <nav class="bottom-nav" id="bottomNav">
+    <button class="nav-btn active" data-tab="main">Главная</button>
+    <button class="nav-btn" data-tab="music">Музыка</button>
+    <button class="nav-btn" data-tab="about">О проекте</button>
   </nav>
 
-  <!-- МОДАЛЬНЫЙ ПРОИГРЫВАТЕЛЬ -->
-  <div class="modal-overlay" id="playerModal">
+  <!-- Модальный плеер -->
+  <div class="modal-overlay" id="playerModal" role="dialog" aria-modal="true">
     <div class="player-modal">
-      <button class="close-modal" onclick="closePlayerModal()"><i class="fa-solid fa-xmark"></i></button>
+      <button class="close-modal" id="closeModalBtn" aria-label="Закрыть плеер">
+        <i class="fa-solid fa-xmark" aria-hidden="true"></i>
+      </button>
       
-      <img src="album_image.png" alt="Cover" class="modal-cover" id="modalCover" onerror="this.src='https://via.placeholder.com/220/0d1117/a855f7?text=Fachionn';">
+      <img src="album_image.png" alt="Cover" class="modal-cover" id="modalCover">
       
       <div class="modal-track-title" id="modalTitle">Track Title</div>
       <div class="modal-track-artist">Fachionn</div>
 
-      <div class="progress-container" id="progressContainer" onclick="setProgress(event)">
+      <div class="progress-container" id="progressContainer">
         <div class="progress-bar" id="progressBar"></div>
       </div>
 
@@ -599,9 +592,15 @@
       </div>
 
       <div class="player-controls">
-        <button class="modal-btn" onclick="prevTrack()"><i class="fa-solid fa-backward-step"></i></button>
-        <button class="modal-btn play-main" onclick="toggleModalPlay()" id="modalPlayBtn"><i class="fa-solid fa-play"></i></button>
-        <button class="modal-btn" onclick="nextTrack()"><i class="fa-solid fa-forward-step"></i></button>
+        <button class="modal-btn" id="prevBtn" aria-label="Предыдущий трек">
+          <i class="fa-solid fa-backward-step" aria-hidden="true"></i>
+        </button>
+        <button class="modal-btn play-main" id="modalPlayBtn" aria-label="Воспроизвести/Пауза">
+          <i class="fa-solid fa-play" aria-hidden="true"></i>
+        </button>
+        <button class="modal-btn" id="nextBtn" aria-label="Следующий трек">
+          <i class="fa-solid fa-forward-step" aria-hidden="true"></i>
+        </button>
       </div>
     </div>
   </div>
@@ -609,193 +608,233 @@
   <audio id="globalAudio"></audio>
 
   <script>
-    // --- 1. СПИСОК ТРЕКОВ (В ОБРАТНОМ ПОРЯДКЕ) ---
-    const rawTrackFiles = [
-      "Fachionn - Along 2025-09-04 13_37.m4a",
-      "Fachionn - An Easy Game 2025-10-11 22_09.m4a",
-      "Fachionn - Don't Call Me.mp3",
-      "Fachionn - Don't Give Up.mp3",
-      "Fachionn - Eyes of the Beast (Radio Version).mp3",
-      "Fachionn - Eyes of the Beast (Reprise) 2025-10-11 22_08.m4a",
-      "Fachionn - Fairy Tale (Radio Version).mp3",
-      "Fachionn - Hands Sky.mp3",
-      "Fachionn - I Am Destiny.mp3",
-      "Fachionn - Pure Thoughts.mp3",
-      "Fachionn - Take It Forever.mp3"
-    ];
+    (() => {
+      'use strict';
 
-    // Разворачиваем список для обратного порядка
-    const trackFiles = rawTrackFiles.reverse();
+      const FALLBACK_COVER = 'https://via.placeholder.com/220/0d1117/a855f7?text=Fachionn';
 
-    const tracksContainer = document.getElementById('tracksContainer');
-    const globalAudio = document.getElementById('globalAudio');
-    const playerModal = document.getElementById('playerModal');
-    
-    const modalTitle = document.getElementById('modalTitle');
-    const modalPlayBtn = document.getElementById('modalPlayBtn');
-    const progressBar = document.getElementById('progressBar');
-    const currentTimeEl = document.getElementById('currentTime');
-    const durationTimeEl = document.getElementById('durationTime');
+      // Трек для главной страницы
+      const mainTrackFiles = [
+        "Star Trap - Fachionn.mp3"
+      ];
 
-    let currentTrackIndex = -1;
+      const DOM = {
+        mainTracksContainer: document.getElementById('mainTracksContainer'),
+        globalAudio: document.getElementById('globalAudio'),
+        playerModal: document.getElementById('playerModal'),
+        closeModalBtn: document.getElementById('closeModalBtn'),
+        modalTitle: document.getElementById('modalTitle'),
+        modalPlayBtn: document.getElementById('modalPlayBtn'),
+        progressBar: document.getElementById('progressBar'),
+        progressContainer: document.getElementById('progressContainer'),
+        currentTimeEl: document.getElementById('currentTime'),
+        durationTimeEl: document.getElementById('durationTime'),
+        bottomNav: document.getElementById('bottomNav'),
+        prevBtn: document.getElementById('prevBtn'),
+        nextBtn: document.getElementById('nextBtn'),
+        mainAlbumCoverImg: document.getElementById('mainAlbumCoverImg'),
+        modalCover: document.getElementById('modalCover')
+      };
 
-    // Рендер списка треков
-    trackFiles.forEach((file, index) => {
-      let cleanName = file.replace(/^Fachionn - /, '')
-                          .replace(/\s\d{4}-\d{2}-\d{2}.*$/, '')
-                          .replace(/\.[^/.]+$/, "");
+      let currentTrackIndex = -1;
 
-      const item = document.createElement('div');
-      item.className = 'track-item';
-      item.innerHTML = `
-        <div class="track-info">
-          <button class="play-btn" onclick="openAndPlay(${index})">
-            <i class="fa-solid fa-play"></i>
-          </button>
-          <span class="track-name">${cleanName}</span>
-        </div>
-      `;
-      tracksContainer.appendChild(item);
-    });
-
-    // Управление модальным плеером
-    function openAndPlay(index) {
-      if (currentTrackIndex !== index) {
-        currentTrackIndex = index;
-        const file = trackFiles[index];
-        let cleanName = file.replace(/^Fachionn - /, '')
-                            .replace(/\s\d{4}-\d{2}-\d{2}.*$/, '')
-                            .replace(/\.[^/.]+$/, "");
-        
-        modalTitle.textContent = cleanName;
-        globalAudio.src = `Tracks/${encodeURIComponent(file)}`;
-        globalAudio.play();
-      } else if (globalAudio.paused) {
-        globalAudio.play();
-      }
-
-      playerModal.classList.add('active');
-      updatePlayIcons(true);
-    }
-
-    function closePlayerModal() {
-      playerModal.classList.remove('active');
-    }
-
-    function toggleModalPlay() {
-      if (globalAudio.paused) {
-        globalAudio.play();
-        updatePlayIcons(true);
-      } else {
-        globalAudio.pause();
-        updatePlayIcons(false);
-      }
-    }
-
-    function updatePlayIcons(isPlaying) {
-      modalPlayBtn.innerHTML = isPlaying ? '<i class="fa-solid fa-pause"></i>' : '<i class="fa-solid fa-play"></i>';
-    }
-
-    function prevTrack() {
-      if (currentTrackIndex > 0) openAndPlay(currentTrackIndex - 1);
-      else openAndPlay(trackFiles.length - 1);
-    }
-
-    function nextTrack() {
-      if (currentTrackIndex < trackFiles.length - 1) openAndPlay(currentTrackIndex + 1);
-      else openAndPlay(0);
-    }
-
-    // Обновление таймера и бара
-    globalAudio.addEventListener('timeupdate', () => {
-      if (globalAudio.duration) {
-        const progressPercent = (globalAudio.currentTime / globalAudio.duration) * 100;
-        progressBar.style.width = `${progressPercent}%`;
-
-        currentTimeEl.textContent = formatTime(globalAudio.currentTime);
-        durationTimeEl.textContent = formatTime(globalAudio.duration);
-      }
-    });
-
-    globalAudio.addEventListener('ended', () => {
-      nextTrack();
-    });
-
-    function setProgress(e) {
-      const width = document.getElementById('progressContainer').clientWidth;
-      const clickX = e.offsetX;
-      const duration = globalAudio.duration;
-      globalAudio.currentTime = (clickX / width) * duration;
-    }
-
-    function formatTime(seconds) {
-      const min = Math.floor(seconds / 60);
-      const sec = Math.floor(seconds % 60);
-      return `${min}:${sec < 10 ? '0' : ''}${sec}`;
-    }
-
-    // --- 2. ПЕРЕКЛЮЧЕНИЕ ВКЛАДОК ---
-    function openTab(evt, tabId) {
-      document.querySelectorAll('.tab-content').forEach(tab => tab.classList.remove('active'));
-      document.querySelectorAll('.nav-btn').forEach(btn => btn.classList.remove('active'));
-
-      document.getElementById(tabId).classList.add('active');
-      evt.currentTarget.classList.add('active');
-    }
-
-    // --- 3. ДВИЖЕНИЕ ЗВЁЗД В КОСМОСЕ (Space Travel Animation) ---
-    const canvas = document.getElementById('space-bg');
-    const ctx = canvas.getContext('2d');
-
-    let stars = [];
-    const numStars = 220;
-
-    function resizeCanvas() {
-      canvas.width = window.innerWidth;
-      canvas.height = window.innerHeight;
-    }
-
-    function initStars() {
-      stars = [];
-      for (let i = 0; i < numStars; i++) {
-        stars.push({
-          x: Math.random() * canvas.width,
-          y: Math.random() * canvas.height,
-          radius: Math.random() * 1.6 + 0.2,
-          speedY: Math.random() * 0.4 + 0.1, // Плавное движение вниз
-          alpha: Math.random()
-        });
-      }
-    }
-
-    function renderSpace() {
-      ctx.clearRect(0, 0, canvas.width, canvas.height);
-
-      stars.forEach(star => {
-        star.y += star.speedY;
-        if (star.y > canvas.height) {
-          star.y = 0;
-          star.x = Math.random() * canvas.width;
-        }
-
-        ctx.beginPath();
-        ctx.arc(star.x, star.y, star.radius, 0, Math.PI * 2);
-        ctx.fillStyle = `rgba(255, 255, 255, ${star.alpha})`;
-        ctx.fill();
+      // Обработка плейсхолдеров обложек
+      [DOM.mainAlbumCoverImg, DOM.modalCover].forEach(img => {
+        if (img) img.addEventListener('error', () => { img.src = FALLBACK_COVER; });
       });
 
-      requestAnimationFrame(renderSpace);
-    }
+      function cleanTrackName(filename) {
+        return filename
+          .replace(/ - Fachionn$/, '')
+          .replace(/^Fachionn - /, '')
+          .replace(/\.[^/.]+$/, "");
+      }
 
-    window.addEventListener('resize', () => {
-      resizeCanvas();
-      initStars();
-    });
+      function formatTime(seconds) {
+        if (isNaN(seconds)) return '0:00';
+        const min = Math.floor(seconds / 60);
+        const sec = Math.floor(seconds % 60);
+        return `${min}:${sec < 10 ? '0' : ''}${sec}`;
+      }
 
-    resizeCanvas();
-    initStars();
-    renderSpace();
+      function renderMainTrack() {
+        const fragment = document.createDocumentFragment();
+
+        mainTrackFiles.forEach((file, index) => {
+          const cleanName = cleanTrackName(file);
+
+          const item = document.createElement('div');
+          item.className = 'track-item';
+
+          const infoDiv = document.createElement('div');
+          infoDiv.className = 'track-info';
+
+          const btn = document.createElement('button');
+          btn.className = 'play-btn';
+          btn.setAttribute('aria-label', `Воспроизвести ${cleanName}`);
+          btn.dataset.index = index;
+          btn.innerHTML = '<i class="fa-solid fa-play" aria-hidden="true"></i>';
+
+          const nameSpan = document.createElement('span');
+          nameSpan.className = 'track-name';
+          nameSpan.textContent = cleanName;
+
+          infoDiv.appendChild(btn);
+          infoDiv.appendChild(nameSpan);
+          item.appendChild(infoDiv);
+          fragment.appendChild(item);
+        });
+
+        DOM.mainTracksContainer.replaceChildren(fragment);
+      }
+
+      function updatePlayIcons(isPlaying) {
+        DOM.modalPlayBtn.innerHTML = isPlaying 
+          ? '<i class="fa-solid fa-pause" aria-hidden="true"></i>' 
+          : '<i class="fa-solid fa-play" aria-hidden="true"></i>';
+      }
+
+      function openAndPlay(index) {
+        if (index < 0 || index >= mainTrackFiles.length) return;
+
+        if (currentTrackIndex !== index) {
+          currentTrackIndex = index;
+          const file = mainTrackFiles[index];
+          DOM.modalTitle.textContent = cleanTrackName(file);
+          DOM.globalAudio.src = `Tracks/${encodeURIComponent(file)}`;
+          DOM.globalAudio.play().catch(err => console.error("Ошибка воспроизведения:", err));
+        } else if (DOM.globalAudio.paused) {
+          DOM.globalAudio.play().catch(err => console.error("Ошибка воспроизведения:", err));
+        }
+
+        DOM.playerModal.classList.add('active');
+        updatePlayIcons(true);
+      }
+
+      function togglePlay() {
+        if (DOM.globalAudio.paused) {
+          DOM.globalAudio.play().catch(err => console.error("Ошибка воспроизведения:", err));
+          updatePlayIcons(true);
+        } else {
+          DOM.globalAudio.pause();
+          updatePlayIcons(false);
+        }
+      }
+
+      function playNext() {
+        const nextIndex = (currentTrackIndex + 1) % mainTrackFiles.length;
+        openAndPlay(nextIndex);
+      }
+
+      function playPrev() {
+        const prevIndex = (currentTrackIndex - 1 + mainTrackFiles.length) % mainTrackFiles.length;
+        openAndPlay(prevIndex);
+      }
+
+      // Делегирование событий
+      DOM.mainTracksContainer.addEventListener('click', (e) => {
+        const playBtn = e.target.closest('.play-btn');
+        if (playBtn) {
+          const index = parseInt(playBtn.dataset.index, 10);
+          openAndPlay(index);
+        }
+      });
+
+      DOM.bottomNav.addEventListener('click', (e) => {
+        const btn = e.target.closest('.nav-btn');
+        if (!btn) return;
+
+        const targetTab = btn.dataset.tab;
+        
+        document.querySelectorAll('.tab-content').forEach(tab => {
+          tab.classList.toggle('active', tab.id === targetTab);
+        });
+
+        document.querySelectorAll('.nav-btn').forEach(navBtn => {
+          navBtn.classList.toggle('active', navBtn === btn);
+        });
+      });
+
+      DOM.closeModalBtn.addEventListener('click', () => {
+        DOM.playerModal.classList.remove('active');
+      });
+
+      DOM.modalPlayBtn.addEventListener('click', togglePlay);
+      DOM.nextBtn.addEventListener('click', playNext);
+      DOM.prevBtn.addEventListener('click', playPrev);
+
+      DOM.progressContainer.addEventListener('click', (e) => {
+        const width = DOM.progressContainer.clientWidth;
+        const clickX = e.offsetX;
+        const duration = DOM.globalAudio.duration;
+        if (duration) {
+          DOM.globalAudio.currentTime = (clickX / width) * duration;
+        }
+      });
+
+      DOM.globalAudio.addEventListener('timeupdate', () => {
+        if (DOM.globalAudio.duration) {
+          const progressPercent = (DOM.globalAudio.currentTime / DOM.globalAudio.duration) * 100;
+          DOM.progressBar.style.width = `${progressPercent}%`;
+          DOM.currentTimeEl.textContent = formatTime(DOM.globalAudio.currentTime);
+          DOM.durationTimeEl.textContent = formatTime(DOM.globalAudio.duration);
+        }
+      });
+
+      DOM.globalAudio.addEventListener('ended', playNext);
+
+      // Оптимизированный космос (Анимация Canvas)
+      function initSpaceAnimation() {
+        const canvas = document.getElementById('space-bg');
+        const ctx = canvas.getContext('2d');
+        let stars = [];
+        const numStars = 150;
+
+        function resize() {
+          canvas.width = window.innerWidth;
+          canvas.height = window.innerHeight;
+        }
+
+        function createStars() {
+          stars = Array.from({ length: numStars }, () => ({
+            x: Math.random() * canvas.width,
+            y: Math.random() * canvas.height,
+            radius: Math.random() * 1.5 + 0.2,
+            speedY: Math.random() * 0.4 + 0.1,
+            alpha: Math.random()
+          }));
+        }
+
+        function render() {
+          ctx.clearRect(0, 0, canvas.width, canvas.height);
+          for (let i = 0; i < stars.length; i++) {
+            const star = stars[i];
+            star.y += star.speedY;
+            if (star.y > canvas.height) {
+              star.y = 0;
+              star.x = Math.random() * canvas.width;
+            }
+            ctx.beginPath();
+            ctx.arc(star.x, star.y, star.radius, 0, Math.PI * 2);
+            ctx.fillStyle = `rgba(255, 255, 255, ${star.alpha})`;
+            ctx.fill();
+          }
+          requestAnimationFrame(render);
+        }
+
+        window.addEventListener('resize', () => {
+          resize();
+          createStars();
+        });
+
+        resize();
+        createStars();
+        render();
+      }
+
+      renderMainTrack();
+      initSpaceAnimation();
+    })();
   </script>
 </body>
 </html>
-
