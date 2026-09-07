@@ -128,7 +128,6 @@
       align-items: center;
     }
 
-    /* Плашка «Новый Релиз!» над обложкой */
     .release-badge {
       display: inline-flex;
       align-items: center;
@@ -257,7 +256,6 @@
       text-overflow: ellipsis;
     }
 
-    /* Стили для карточек альбомов/синглов во вкладке Музыка */
     .music-releases-grid {
       display: flex;
       flex-direction: column;
@@ -326,7 +324,6 @@
       opacity: 0.8;
     }
 
-    /* Стили для вкладки "О проекте" */
     .links-section-title {
       font-size: 0.9rem;
       color: var(--text-muted);
@@ -374,7 +371,6 @@
       transform: translateY(-2px);
     }
 
-    /* Иконки соцсетей и стримингов */
     .social-btn.telegram i { color: #38bdf8; }
     .social-btn.vk i { color: #0077ff; }
     .social-btn.youtube i { color: #ff0000; }
@@ -384,7 +380,6 @@
     .social-btn.spotify i { color: #1db954; }
     .social-btn.apple i { color: #fa233b; }
 
-    /* Кнопка доната */
     .donate-container {
       margin-top: 30px;
       margin-bottom: 15px;
@@ -650,16 +645,15 @@
   <main class="main-container">
     <div class="glass-card">
 
-      <!-- Вкладка 1: Главная (Сингл Star Trap) -->
+      <!-- Вкладка 1: Главная -->
       <section id="main" class="tab-content active">
         <div class="album-section">
-          <!-- Надпись «Новый Релиз!» -->
           <div class="release-badge" id="newReleaseBadge">
             <i class="fa-solid fa-compact-disc" aria-hidden="true"></i> Новый Релиз!
           </div>
           
-          <img src="album_image.png" alt="Star Trap Cover" class="album-cover" id="mainAlbumCoverImg">
-          <div class="album-meta">Star Trap. Single, 2025</div>
+          <img src="album_image.png" alt="Starry Night Cover" class="album-cover" id="mainAlbumCoverImg">
+          <div class="album-meta">Starry Night. Single, 2025</div>
         </div>
 
         <div class="tracks-list" id="mainTracksContainer"></div>
@@ -672,8 +666,6 @@
 
       <!-- Вкладка 3: О проекте -->
       <section id="about" class="tab-content">
-        
-        <!-- Страницы проекта -->
         <div class="links-block">
           <div class="links-section-title">Страницы проекта:</div>
           <div class="links-grid">
@@ -689,7 +681,6 @@
           </div>
         </div>
 
-        <!-- Стриминговые сервисы -->
         <div class="links-block">
           <div class="links-section-title">Слушать на стриминговых сервисах:</div>
           <div class="links-grid">
@@ -714,7 +705,6 @@
           </div>
         </div>
 
-        <!-- Кнопка доната -->
         <div class="donate-container">
           <a href="https://tips.yandex.ru/guest/payment/3639534?wl=yandex_music_dark" target="_blank" rel="noopener noreferrer" class="donate-btn">
             <i class="fa-solid fa-heart" aria-hidden="true"></i> Поддержать донатом
@@ -776,11 +766,11 @@
 
       const FALLBACK_COVER = 'https://via.placeholder.com/220/0d1117/a855f7?text=Fachionn';
 
-      // Трек для главной страницы
+      // Главный релиз (используем файлы, присутствующие в репозитории)
       const mainTrackFiles = [
         {
-          title: "Star Trap",
-          file: "Star Trap - Fachionn.mp3",
+          title: "Starry Night (New Version)",
+          file: "Fachionn - Starry Night (New Version).mp3",
           cover: "album_image.png"
         }
       ];
@@ -860,7 +850,6 @@
         return `${min}:${sec < 10 ? '0' : ''}${sec}`;
       }
 
-      // Отрисовка списка главного трека
       function renderMainTrack() {
         const fragment = document.createDocumentFragment();
 
@@ -890,7 +879,6 @@
         DOM.mainTracksContainer.replaceChildren(fragment);
       }
 
-      // Отрисовка релизов на вкладке "Музыка"
       function renderMusicTab() {
         const fragment = document.createDocumentFragment();
 
@@ -944,7 +932,8 @@
           const track = playlist[index];
           DOM.modalTitle.textContent = track.title;
           DOM.modalCover.src = track.cover;
-          DOM.globalAudio.src = `Tracks/${encodeURIComponent(track.file)}`;
+          // Путь формируется без привязки к папке Tracks
+          DOM.globalAudio.src = encodeURIComponent(track.file);
           DOM.globalAudio.play().catch(err => console.error("Ошибка воспроизведения:", err));
         } else if (DOM.globalAudio.paused) {
           DOM.globalAudio.play().catch(err => console.error("Ошибка воспроизведения:", err));
@@ -976,7 +965,6 @@
         openAndPlay(activePlaylist, prevIndex);
       }
 
-      // Открытие плеера с главной
       if (DOM.newReleaseBadge) {
         DOM.newReleaseBadge.addEventListener('click', () => openAndPlay(mainTrackFiles, 0));
       }
@@ -984,7 +972,6 @@
         DOM.mainAlbumCoverImg.addEventListener('click', () => openAndPlay(mainTrackFiles, 0));
       }
 
-      // Делегирование событий главной страницы
       DOM.mainTracksContainer.addEventListener('click', (e) => {
         const playBtn = e.target.closest('.play-btn');
         if (playBtn) {
@@ -993,7 +980,6 @@
         }
       });
 
-      // Клик по карточке релиза на вкладке "Музыка"
       DOM.musicContainer.addEventListener('click', (e) => {
         const card = e.target.closest('.release-card');
         if (card) {
@@ -1002,7 +988,6 @@
         }
       });
 
-      // Навигация
       DOM.bottomNav.addEventListener('click', (e) => {
         const btn = e.target.closest('.nav-btn');
         if (!btn) return;
@@ -1046,7 +1031,6 @@
 
       DOM.globalAudio.addEventListener('ended', playNext);
 
-      // Инициализация списков треков
       renderMainTrack();
       renderMusicTab();
 
@@ -1067,21 +1051,25 @@
           stars = Array.from({ length: numStars }, () => ({
             x: Math.random() * canvas.width,
             y: Math.random() * canvas.height,
-            radius: Math.random() * 1.5 + 0.2,
-            alpha: Math.random()
+            size: Math.random() * 1.8 + 0.2,
+            alpha: Math.random(),
+            speed: Math.random() * 0.01 + 0.003
           }));
         }
 
-        function draw() {
+        function animate() {
           ctx.clearRect(0, 0, canvas.width, canvas.height);
-          ctx.fillStyle = '#ffffff';
           stars.forEach(star => {
-            ctx.globalAlpha = star.alpha;
+            star.alpha += star.speed;
+            if (star.alpha > 1 || star.alpha < 0) {
+              star.speed = -star.speed;
+            }
+            ctx.fillStyle = `rgba(255, 255, 255, ${Math.abs(star.alpha)})`;
             ctx.beginPath();
-            ctx.arc(star.x, star.y, star.radius, 0, Math.PI * 2);
+            ctx.arc(star.x, star.y, star.size, 0, Math.PI * 2);
             ctx.fill();
           });
-          requestAnimationFrame(draw);
+          requestAnimationFrame(animate);
         }
 
         window.addEventListener('resize', () => {
@@ -1091,7 +1079,7 @@
 
         resize();
         createStars();
-        draw();
+        animate();
       }
 
       initSpaceAnimation();
