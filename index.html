@@ -7,7 +7,7 @@
   
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;700;800&family=Inter:wght@300;400;600&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;700;800&family=Inter:wght@300;400;600;700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
   
   <style>
@@ -232,59 +232,97 @@
       text-overflow: ellipsis;
     }
 
-    .about-text p {
-      line-height: 1.8;
-      color: #cbd5e1;
-      margin-bottom: 18px;
-      font-size: 0.95rem;
-      font-weight: 300;
-    }
-
-    .social-links {
-      margin-top: 30px;
-      padding-top: 25px;
-      border-top: 1px solid var(--glass-border);
-    }
-
-    .social-title {
-      font-size: 0.85rem;
+    /* Стили для вкладки "О проекте" */
+    .links-section-title {
+      font-size: 0.9rem;
       color: var(--text-muted);
-      margin-bottom: 15px;
+      margin-bottom: 14px;
       text-transform: uppercase;
       letter-spacing: 1px;
+      font-weight: 700;
+    }
+
+    .links-block {
+      margin-bottom: 25px;
     }
 
     .links-grid {
-      display: flex;
-      gap: 14px;
-      flex-wrap: wrap;
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+      gap: 12px;
     }
 
     .social-btn {
       text-decoration: none;
       color: var(--text-main);
-      background: rgba(255, 255, 255, 0.04);
+      background: rgba(255, 255, 255, 0.03);
       border: 1px solid var(--glass-border);
-      padding: 12px 22px;
+      padding: 12px 18px;
       border-radius: 14px;
       font-size: 0.9rem;
       font-weight: 600;
       display: flex;
       align-items: center;
-      gap: 10px;
+      gap: 12px;
       transition: all 0.3s ease;
     }
 
-    .social-btn i { font-size: 1.2rem; }
-    .social-btn.bandlab i { color: #f59e0b; }
-    .social-btn.telegram i { color: #38bdf8; }
-    .social-btn.vk i { color: #0077ff; }
+    .social-btn i {
+      font-size: 1.1rem;
+      width: 20px;
+      text-align: center;
+    }
 
     .social-btn:hover {
-      background: rgba(255, 255, 255, 0.12);
+      background: rgba(255, 255, 255, 0.1);
       border-color: var(--accent);
-      box-shadow: 0 0 20px var(--accent-glow);
-      transform: translateY(-3px);
+      box-shadow: 0 0 15px var(--accent-glow);
+      transform: translateY(-2px);
+    }
+
+    /* Иконки соцсетей и стримингов */
+    .social-btn.telegram i { color: #38bdf8; }
+    .social-btn.vk i { color: #0077ff; }
+    .social-btn.youtube i { color: #ff0000; }
+    .social-btn.yandex i { color: #fc3f1d; }
+    .social-btn.zvuk i { color: #22c55e; }
+    .social-btn.kion i { color: #e11d48; }
+    .social-btn.spotify i { color: #1db954; }
+    .social-btn.apple i { color: #fa233b; }
+
+    /* Кнопка доната */
+    .donate-container {
+      margin-top: 30px;
+      margin-bottom: 15px;
+    }
+
+    .donate-btn {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 12px;
+      width: 100%;
+      padding: 16px 24px;
+      background: linear-gradient(135deg, rgba(168, 85, 247, 0.3) 0%, rgba(147, 51, 234, 0.5) 100%);
+      border: 1px solid var(--accent);
+      border-radius: 18px;
+      color: #fff;
+      font-weight: 700;
+      font-size: 1.05rem;
+      text-decoration: none;
+      box-shadow: 0 0 25px rgba(168, 85, 247, 0.3);
+      transition: all 0.3s ease;
+    }
+
+    .donate-btn i {
+      color: #f43f5e;
+      font-size: 1.2rem;
+    }
+
+    .donate-btn:hover {
+      background: linear-gradient(135deg, rgba(168, 85, 247, 0.5) 0%, rgba(147, 51, 234, 0.8) 100%);
+      box-shadow: 0 0 35px var(--accent-glow);
+      transform: translateY(-3px) scale(1.01);
     }
 
     .site-author-link {
@@ -501,7 +539,7 @@
       .glass-card { padding: 25px 20px; }
       .bottom-nav { width: 92%; justify-content: space-around; }
       .nav-btn { padding: 10px 14px; font-size: 0.8rem; }
-      .links-grid { flex-direction: column; }
+      .links-grid { grid-template-columns: 1fr; }
     }
   </style>
 </head>
@@ -537,25 +575,53 @@
 
       <!-- Вкладка 3: О проекте -->
       <section id="about" class="tab-content">
-        <div class="about-text">
-          <p>Датой рождения нашего проекта считается 18 сентября 2023 года. Именно в этот день был открыт наш канал в Telegram, где появилась новость о выходе первых двух синглов — Impro и Blue Magic. И уже 1 октября этого же года вышел дебютный альбом Anonymous. Почему же он получил такое загадочное название? Всё очень просто. Автор всех композиций предпочитает не распространяться о себе, поэтому на обложке альбома мы видим лишь его силуэт. А сам проект изначально получил название Ares, образованное от его собственного имени. Позднее группа была переименована в Fachionn. У этого названия тоже интересная история, связанная с орфографической ошибкой. Автор проекта искал новое название и тут ему пришло на ум английское слово Fashion - мода. Но написал он его неправильно. Вместо буквы "s" поставил "с". И уже при создании логотипа решили, что надо добавить ещё одну букву "n". Таким образом название стало более броским и запоминающимся.</p>
-          
-          <p>На данный момент проект насчитывает около 20 студийных альбомов, несколько EP и Mixtape изданий, а также множество синглов. Работа продолжается, поэтому мы ещё долго будем радовать вас интересным и оригинальным музыкальным материалом.</p>
-        </div>
-
-        <div class="social-links">
-          <div class="social-title">Чтобы слушать нашу музыку и не пропускать новостей:</div>
+        
+        <!-- Страницы проекта -->
+        <div class="links-block">
+          <div class="links-section-title">Страницы проекта:</div>
           <div class="links-grid">
-            <a href="https://www.bandlab.com/fachionn" target="_blank" rel="noopener noreferrer" class="social-btn bandlab">
-              <i class="fa-solid fa-record-vinyl" aria-hidden="true"></i> BandLab
-            </a>
             <a href="https://t.me/fachionn_music" target="_blank" rel="noopener noreferrer" class="social-btn telegram">
               <i class="fa-brands fa-telegram" aria-hidden="true"></i> Telegram
             </a>
-            <a href="https://vk.com/fachionn" target="_blank" rel="noopener noreferrer" class="social-btn vk">
-              <i class="fa-brands fa-vk" aria-hidden="true"></i> ВКонтакте
+            <a href="https://vk.ru/fachionn" target="_blank" rel="noopener noreferrer" class="social-btn vk">
+              <i class="fa-brands fa-vk" aria-hidden="true"></i> ВК
+            </a>
+            <a href="https://youtube.com/@fachionn_music?si=7KwmKaVoWXnf8INN" target="_blank" rel="noopener noreferrer" class="social-btn youtube">
+              <i class="fa-brands fa-youtube" aria-hidden="true"></i> YouTube
             </a>
           </div>
+        </div>
+
+        <!-- Стриминговые сервисы -->
+        <div class="links-block">
+          <div class="links-section-title">Слушать на стриминговых сервисах:</div>
+          <div class="links-grid">
+            <a href="https://music.yandex.ru/artist/24925583?utm_medium=copy_link&ref_id=736fc09b-742c-42d5-9c2d-d830d96b2b7d" target="_blank" rel="noopener noreferrer" class="social-btn yandex">
+              <i class="fa-solid fa-music" aria-hidden="true"></i> Яндекс Музыка
+            </a>
+            <a href="https://vk.com/artist/3952010487551642017" target="_blank" rel="noopener noreferrer" class="social-btn vk">
+              <i class="fa-brands fa-vk" aria-hidden="true"></i> ВК Музыка
+            </a>
+            <a href="https://zvuk.com/artist/213746774" target="_blank" rel="noopener noreferrer" class="social-btn zvuk">
+              <i class="fa-solid fa-wave-square" aria-hidden="true"></i> Звук
+            </a>
+            <a href="https://mts-music-spo.onelink.me/sKFX?af_js_web=true&af_ss_ver=2_3_0&pid=music_external_widget&c=https://music.mts.ru/artist/24925583&deep_link_value=https://music.mts.ru/artist/24925583&af_ss_ui=true" target="_blank" rel="noopener noreferrer" class="social-btn kion">
+              <i class="fa-solid fa-play-circle" aria-hidden="true"></i> КИОН Музыка
+            </a>
+            <a href="https://open.spotify.com/artist/1tFYtQNUNRlp2smmXTvGPn?si=3lRzyjVxSASP4P1doMTvtA" target="_blank" rel="noopener noreferrer" class="social-btn spotify">
+              <i class="fa-brands fa-spotify" aria-hidden="true"></i> Spotify
+            </a>
+            <a href="https://music.apple.com/ru/artist/fachionn/1851622671" target="_blank" rel="noopener noreferrer" class="social-btn apple">
+              <i class="fa-brands fa-apple" aria-hidden="true"></i> Apple Music
+            </a>
+          </div>
+        </div>
+
+        <!-- Кнопка доната -->
+        <div class="donate-container">
+          <a href="https://tips.yandex.ru/guest/payment/3639534?wl=yandex_music_dark" target="_blank" rel="noopener noreferrer" class="donate-btn">
+            <i class="fa-solid fa-heart" aria-hidden="true"></i> Поддержать донатом
+          </a>
         </div>
 
         <a href="https://t.me/vizquacker" target="_blank" rel="noopener noreferrer" class="site-author-link">Site by vizquacker</a>
@@ -783,7 +849,7 @@
 
       DOM.globalAudio.addEventListener('ended', playNext);
 
-      // Оптимизированный космос (Анимация Canvas)
+      // Анимация звездного неба (Canvas)
       function initSpaceAnimation() {
         const canvas = document.getElementById('space-bg');
         const ctx = canvas.getContext('2d');
