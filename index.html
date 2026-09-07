@@ -134,6 +134,41 @@
     .album-section {
       text-align: center;
       margin-bottom: 30px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+
+    /* Плашка «Новый Релиз!» над обложкой */
+    .release-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 6px 18px;
+      margin-bottom: 16px;
+      background: rgba(168, 85, 247, 0.15);
+      border: 1px solid var(--accent);
+      border-radius: 20px;
+      color: #e9d5ff;
+      font-size: 0.85rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 1.5px;
+      cursor: pointer;
+      box-shadow: 0 0 15px rgba(168, 85, 247, 0.25);
+      transition: all 0.3s ease;
+      user-select: none;
+    }
+
+    .release-badge:hover {
+      background: var(--accent);
+      color: #fff;
+      box-shadow: 0 0 25px var(--accent-glow);
+      transform: translateY(-2px) scale(1.03);
+    }
+
+    .release-badge i {
+      font-size: 0.8rem;
     }
 
     .album-cover {
@@ -145,6 +180,7 @@
                   0 0 20px rgba(168, 85, 247, 0.2);
       border: 1px solid var(--glass-border);
       transition: transform 0.4s ease;
+      cursor: pointer;
     }
 
     .album-cover:hover {
@@ -559,6 +595,11 @@
       <!-- Вкладка 1: Главная (Сингл Star Trap) -->
       <section id="main" class="tab-content active">
         <div class="album-section">
+          <!-- Надпись «Новый Релиз!» -->
+          <div class="release-badge" id="newReleaseBadge">
+            <i class="fa-solid fa-compact-disc" aria-hidden="true"></i> Новый Релиз!
+          </div>
+          
           <img src="album_image.png" alt="Star Trap Cover" class="album-cover" id="mainAlbumCoverImg">
           <div class="album-meta">Star Trap. Single, 2026</div>
         </div>
@@ -699,7 +740,8 @@
         prevBtn: document.getElementById('prevBtn'),
         nextBtn: document.getElementById('nextBtn'),
         mainAlbumCoverImg: document.getElementById('mainAlbumCoverImg'),
-        modalCover: document.getElementById('modalCover')
+        modalCover: document.getElementById('modalCover'),
+        newReleaseBadge: document.getElementById('newReleaseBadge')
       };
 
       let currentTrackIndex = -1;
@@ -795,6 +837,14 @@
       function playPrev() {
         const prevIndex = (currentTrackIndex - 1 + mainTrackFiles.length) % mainTrackFiles.length;
         openAndPlay(prevIndex);
+      }
+
+      // Открытие плеера по клику на надпись «Новый Релиз!» и по обложке
+      if (DOM.newReleaseBadge) {
+        DOM.newReleaseBadge.addEventListener('click', () => openAndPlay(0));
+      }
+      if (DOM.mainAlbumCoverImg) {
+        DOM.mainAlbumCoverImg.addEventListener('click', () => openAndPlay(0));
       }
 
       // Делегирование событий
