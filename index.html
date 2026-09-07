@@ -652,8 +652,8 @@
             <i class="fa-solid fa-compact-disc" aria-hidden="true"></i> Новый Релиз!
           </div>
           
-          <img src="album_image.png" alt="Starry Night Cover" class="album-cover" id="mainAlbumCoverImg">
-          <div class="album-meta">Starry Night. Single, 2025</div>
+          <img src="album_image.png" alt="Star Trap Cover" class="album-cover" id="mainAlbumCoverImg">
+          <div class="album-meta" id="mainAlbumMeta">Star Trap. Single, 2025</div>
         </div>
 
         <div class="tracks-list" id="mainTracksContainer"></div>
@@ -764,19 +764,25 @@
     (() => {
       'use strict';
 
-      const FALLBACK_COVER = 'https://via.placeholder.com/220/0d1117/a855f7?text=Fachionn';
+      const FALLBACK_COVER = 'album_image.png';
 
-      // Главный релиз (используем файлы, присутствующие в репозитории)
+      // Трек для главной страницы
       const mainTrackFiles = [
         {
-          title: "Starry Night (New Version)",
-          file: "Fachionn - Starry Night (New Version).mp3",
+          title: "Star Trap",
+          file: "Star Trap - Fachionn.mp3",
           cover: "album_image.png"
         }
       ];
 
       // Треки для вкладки "Музыка"
       const musicTracks = [
+        {
+          title: "Star Trap",
+          file: "Star Trap - Fachionn.mp3",
+          cover: "album_image.png",
+          type: "Single, 2025"
+        },
         {
           title: "Starry Night (New Version)",
           file: "Fachionn - Starry Night (New Version).mp3",
@@ -932,7 +938,6 @@
           const track = playlist[index];
           DOM.modalTitle.textContent = track.title;
           DOM.modalCover.src = track.cover;
-          // Путь формируется без привязки к папке Tracks
           DOM.globalAudio.src = encodeURIComponent(track.file);
           DOM.globalAudio.play().catch(err => console.error("Ошибка воспроизведения:", err));
         } else if (DOM.globalAudio.paused) {
