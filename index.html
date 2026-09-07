@@ -766,7 +766,7 @@
 
       const FALLBACK_COVER = 'album_image.png';
 
-      // Трек для главной страницы
+      // Только Star Trap на Главной
       const mainTrackFiles = [
         {
           title: "Star Trap",
@@ -775,14 +775,8 @@
         }
       ];
 
-      // Треки для вкладки "Музыка"
+      // Настоящий список во вкладке "Музыка"
       const musicTracks = [
-        {
-          title: "Star Trap",
-          file: "Star Trap - Fachionn.mp3",
-          cover: "album_image.png",
-          type: "Single, 2025"
-        },
         {
           title: "Starry Night (New Version)",
           file: "Fachionn - Starry Night (New Version).mp3",
@@ -844,7 +838,6 @@
       let activePlaylist = [];
       let currentTrackIndex = -1;
 
-      // Обработка ошибок загрузки обложек
       [DOM.mainAlbumCoverImg, DOM.modalCover].forEach(img => {
         if (img) img.addEventListener('error', () => { img.src = FALLBACK_COVER; });
       });
