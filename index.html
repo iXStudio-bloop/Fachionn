@@ -120,17 +120,6 @@
       to { opacity: 1; transform: translateY(0); }
     }
 
-    .empty-box {
-      background: rgba(255, 255, 255, 0.02);
-      border: 1px dashed rgba(255, 255, 255, 0.15);
-      border-radius: 18px;
-      padding: 60px 20px;
-      text-align: center;
-      color: var(--text-muted);
-      font-size: 1.05rem;
-      letter-spacing: 0.5px;
-    }
-
     .album-section {
       text-align: center;
       margin-bottom: 30px;
@@ -266,6 +255,75 @@
       white-space: nowrap;
       overflow: hidden;
       text-overflow: ellipsis;
+    }
+
+    /* Стили для карточек альбомов/синглов во вкладке Музыка */
+    .music-releases-grid {
+      display: flex;
+      flex-direction: column;
+      gap: 18px;
+      max-height: 520px;
+      overflow-y: auto;
+      padding-right: 6px;
+    }
+
+    .music-releases-grid::-webkit-scrollbar {
+      width: 6px;
+    }
+    .music-releases-grid::-webkit-scrollbar-thumb {
+      background: rgba(255, 255, 255, 0.2);
+      border-radius: 10px;
+    }
+
+    .release-card {
+      background: rgba(255, 255, 255, 0.03);
+      border: 1px solid var(--glass-border);
+      border-radius: 18px;
+      padding: 14px 18px;
+      display: flex;
+      align-items: center;
+      gap: 20px;
+      transition: all 0.3s ease;
+      cursor: pointer;
+    }
+
+    .release-card:hover {
+      background: var(--glass-hover);
+      border-color: var(--accent);
+      transform: translateY(-2px);
+      box-shadow: 0 8px 20px rgba(0, 0, 0, 0.4);
+    }
+
+    .release-card-cover {
+      width: 85px;
+      height: 85px;
+      border-radius: 12px;
+      object-fit: cover;
+      box-shadow: 0 6px 15px rgba(0, 0, 0, 0.5);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      flex-shrink: 0;
+    }
+
+    .release-card-details {
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      gap: 4px;
+    }
+
+    .release-card-title {
+      font-size: 1.15rem;
+      font-weight: 700;
+      color: var(--text-main);
+      letter-spacing: 0.3px;
+    }
+
+    .release-card-meta {
+      font-size: 0.85rem;
+      color: var(--text-muted);
+      font-weight: 400;
+      letter-spacing: 0.2px;
+      opacity: 0.8;
     }
 
     /* Стили для вкладки "О проекте" */
@@ -601,7 +659,7 @@
           </div>
           
           <img src="album_image.png" alt="Star Trap Cover" class="album-cover" id="mainAlbumCoverImg">
-          <div class="album-meta">Star Trap. Single, 2026</div>
+          <div class="album-meta">Star Trap. Single, 2025</div>
         </div>
 
         <div class="tracks-list" id="mainTracksContainer"></div>
@@ -609,9 +667,7 @@
 
       <!-- Вкладка 2: Музыка -->
       <section id="music" class="tab-content">
-        <div class="empty-box">
-          эта вкладка пуста :(
-        </div>
+        <div class="music-releases-grid" id="musicContainer"></div>
       </section>
 
       <!-- Вкладка 3: О проекте -->
@@ -722,11 +778,56 @@
 
       // Трек для главной страницы
       const mainTrackFiles = [
-        "Star Trap - Fachionn.mp3"
+        {
+          title: "Star Trap",
+          file: "Star Trap - Fachionn.mp3",
+          cover: "album_image.png"
+        }
+      ];
+
+      // Треки для вкладки "Музыка"
+      const musicTracks = [
+        {
+          title: "Starry Night (New Version)",
+          file: "Fachionn - Starry Night (New Version).mp3",
+          cover: "Starry Night.jpg",
+          type: "Single, 2025"
+        },
+        {
+          title: "Eyes of the Beast",
+          file: "Fachionn - Eyes of the Beast.mp3",
+          cover: "Eyes of the Beast.jpg",
+          type: "Single, 2025"
+        },
+        {
+          title: "Fairy Tale",
+          file: "Fachionn - Fairy Tale.mp3",
+          cover: "Fairy Tale.jpg",
+          type: "Single, 2025"
+        },
+        {
+          title: "Hands Sky",
+          file: "Fachionn - Hands Sky.mp3",
+          cover: "Hands Sky.jpg",
+          type: "Single, 2025"
+        },
+        {
+          title: "Don't Quite",
+          file: "Fachionn - Don t Quite.mp3",
+          cover: "Don't Quite.jpg",
+          type: "Single, 2025"
+        },
+        {
+          title: "Pure Thoughts",
+          file: "Fachionn - Pure Thoughts.mp3",
+          cover: "Pure Thoughts.jpg",
+          type: "Single, 2025"
+        }
       ];
 
       const DOM = {
         mainTracksContainer: document.getElementById('mainTracksContainer'),
+        musicContainer: document.getElementById('musicContainer'),
         globalAudio: document.getElementById('globalAudio'),
         playerModal: document.getElementById('playerModal'),
         closeModalBtn: document.getElementById('closeModalBtn'),
@@ -744,19 +845,13 @@
         newReleaseBadge: document.getElementById('newReleaseBadge')
       };
 
+      let activePlaylist = [];
       let currentTrackIndex = -1;
 
-      // Обработка плейсхолдеров обложек
+      // Обработка ошибок загрузки обложек
       [DOM.mainAlbumCoverImg, DOM.modalCover].forEach(img => {
         if (img) img.addEventListener('error', () => { img.src = FALLBACK_COVER; });
       });
-
-      function cleanTrackName(filename) {
-        return filename
-          .replace(/ - Fachionn$/, '')
-          .replace(/^Fachionn - /, '')
-          .replace(/\.[^/.]+$/, "");
-      }
 
       function formatTime(seconds) {
         if (isNaN(seconds)) return '0:00';
@@ -765,12 +860,11 @@
         return `${min}:${sec < 10 ? '0' : ''}${sec}`;
       }
 
+      // Отрисовка списка главного трека
       function renderMainTrack() {
         const fragment = document.createDocumentFragment();
 
-        mainTrackFiles.forEach((file, index) => {
-          const cleanName = cleanTrackName(file);
-
+        mainTrackFiles.forEach((itemData, index) => {
           const item = document.createElement('div');
           item.className = 'track-item';
 
@@ -779,13 +873,13 @@
 
           const btn = document.createElement('button');
           btn.className = 'play-btn';
-          btn.setAttribute('aria-label', `Воспроизвести ${cleanName}`);
+          btn.setAttribute('aria-label', `Воспроизвести ${itemData.title}`);
           btn.dataset.index = index;
           btn.innerHTML = '<i class="fa-solid fa-play" aria-hidden="true"></i>';
 
           const nameSpan = document.createElement('span');
           nameSpan.className = 'track-name';
-          nameSpan.textContent = cleanName;
+          nameSpan.textContent = itemData.title;
 
           infoDiv.appendChild(btn);
           infoDiv.appendChild(nameSpan);
@@ -796,20 +890,61 @@
         DOM.mainTracksContainer.replaceChildren(fragment);
       }
 
+      // Отрисовка релизов на вкладке "Музыка"
+      function renderMusicTab() {
+        const fragment = document.createDocumentFragment();
+
+        musicTracks.forEach((track, index) => {
+          const card = document.createElement('div');
+          card.className = 'release-card';
+          card.dataset.index = index;
+
+          const img = document.createElement('img');
+          img.src = track.cover;
+          img.alt = track.title;
+          img.className = 'release-card-cover';
+          img.addEventListener('error', () => { img.src = FALLBACK_COVER; });
+
+          const details = document.createElement('div');
+          details.className = 'release-card-details';
+
+          const title = document.createElement('div');
+          title.className = 'release-card-title';
+          title.textContent = track.title;
+
+          const meta = document.createElement('div');
+          meta.className = 'release-card-meta';
+          meta.textContent = track.type;
+
+          details.appendChild(title);
+          details.appendChild(meta);
+
+          card.appendChild(img);
+          card.appendChild(details);
+
+          fragment.appendChild(card);
+        });
+
+        DOM.musicContainer.replaceChildren(fragment);
+      }
+
       function updatePlayIcons(isPlaying) {
         DOM.modalPlayBtn.innerHTML = isPlaying 
           ? '<i class="fa-solid fa-pause" aria-hidden="true"></i>' 
           : '<i class="fa-solid fa-play" aria-hidden="true"></i>';
       }
 
-      function openAndPlay(index) {
-        if (index < 0 || index >= mainTrackFiles.length) return;
+      function openAndPlay(playlist, index) {
+        if (index < 0 || index >= playlist.length) return;
 
-        if (currentTrackIndex !== index) {
+        activePlaylist = playlist;
+
+        if (currentTrackIndex !== index || DOM.globalAudio.src.indexOf(encodeURIComponent(playlist[index].file)) === -1) {
           currentTrackIndex = index;
-          const file = mainTrackFiles[index];
-          DOM.modalTitle.textContent = cleanTrackName(file);
-          DOM.globalAudio.src = `Tracks/${encodeURIComponent(file)}`;
+          const track = playlist[index];
+          DOM.modalTitle.textContent = track.title;
+          DOM.modalCover.src = track.cover;
+          DOM.globalAudio.src = `Tracks/${encodeURIComponent(track.file)}`;
           DOM.globalAudio.play().catch(err => console.error("Ошибка воспроизведения:", err));
         } else if (DOM.globalAudio.paused) {
           DOM.globalAudio.play().catch(err => console.error("Ошибка воспроизведения:", err));
@@ -830,32 +965,44 @@
       }
 
       function playNext() {
-        const nextIndex = (currentTrackIndex + 1) % mainTrackFiles.length;
-        openAndPlay(nextIndex);
+        if (!activePlaylist.length) return;
+        const nextIndex = (currentTrackIndex + 1) % activePlaylist.length;
+        openAndPlay(activePlaylist, nextIndex);
       }
 
       function playPrev() {
-        const prevIndex = (currentTrackIndex - 1 + mainTrackFiles.length) % mainTrackFiles.length;
-        openAndPlay(prevIndex);
+        if (!activePlaylist.length) return;
+        const prevIndex = (currentTrackIndex - 1 + activePlaylist.length) % activePlaylist.length;
+        openAndPlay(activePlaylist, prevIndex);
       }
 
-      // Открытие плеера по клику на надпись «Новый Релиз!» и по обложке
+      // Открытие плеера с главной
       if (DOM.newReleaseBadge) {
-        DOM.newReleaseBadge.addEventListener('click', () => openAndPlay(0));
+        DOM.newReleaseBadge.addEventListener('click', () => openAndPlay(mainTrackFiles, 0));
       }
       if (DOM.mainAlbumCoverImg) {
-        DOM.mainAlbumCoverImg.addEventListener('click', () => openAndPlay(0));
+        DOM.mainAlbumCoverImg.addEventListener('click', () => openAndPlay(mainTrackFiles, 0));
       }
 
-      // Делегирование событий
+      // Делегирование событий главной страницы
       DOM.mainTracksContainer.addEventListener('click', (e) => {
         const playBtn = e.target.closest('.play-btn');
         if (playBtn) {
           const index = parseInt(playBtn.dataset.index, 10);
-          openAndPlay(index);
+          openAndPlay(mainTrackFiles, index);
         }
       });
 
+      // Клик по карточке релиза на вкладке "Музыка"
+      DOM.musicContainer.addEventListener('click', (e) => {
+        const card = e.target.closest('.release-card');
+        if (card) {
+          const index = parseInt(card.dataset.index, 10);
+          openAndPlay(musicTracks, index);
+        }
+      });
+
+      // Навигация
       DOM.bottomNav.addEventListener('click', (e) => {
         const btn = e.target.closest('.nav-btn');
         if (!btn) return;
@@ -899,9 +1046,14 @@
 
       DOM.globalAudio.addEventListener('ended', playNext);
 
+      // Инициализация списков треков
+      renderMainTrack();
+      renderMusicTab();
+
       // Анимация звездного неба (Canvas)
       function initSpaceAnimation() {
         const canvas = document.getElementById('space-bg');
+        if (!canvas) return;
         const ctx = canvas.getContext('2d');
         let stars = [];
         const numStars = 150;
@@ -916,26 +1068,20 @@
             x: Math.random() * canvas.width,
             y: Math.random() * canvas.height,
             radius: Math.random() * 1.5 + 0.2,
-            speedY: Math.random() * 0.4 + 0.1,
             alpha: Math.random()
           }));
         }
 
-        function render() {
+        function draw() {
           ctx.clearRect(0, 0, canvas.width, canvas.height);
-          for (let i = 0; i < stars.length; i++) {
-            const star = stars[i];
-            star.y += star.speedY;
-            if (star.y > canvas.height) {
-              star.y = 0;
-              star.x = Math.random() * canvas.width;
-            }
+          ctx.fillStyle = '#ffffff';
+          stars.forEach(star => {
+            ctx.globalAlpha = star.alpha;
             ctx.beginPath();
             ctx.arc(star.x, star.y, star.radius, 0, Math.PI * 2);
-            ctx.fillStyle = `rgba(255, 255, 255, ${star.alpha})`;
             ctx.fill();
-          }
-          requestAnimationFrame(render);
+          });
+          requestAnimationFrame(draw);
         }
 
         window.addEventListener('resize', () => {
@@ -945,10 +1091,9 @@
 
         resize();
         createStars();
-        render();
+        draw();
       }
 
-      renderMainTrack();
       initSpaceAnimation();
     })();
   </script>
